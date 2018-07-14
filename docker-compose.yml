@@ -1,0 +1,102 @@
+version : '3.3'
+services:
+    roachdb:
+        image: cockroachdb/cockroach:v2.0.3
+        networks:
+            axolotl:
+                aliases:
+                    - roachdb
+        volumes:
+            - type: volume
+              source: roach-volumes
+              target: /cockroach/cockroach-data
+              volume:
+                nocopy: true
+        ports:
+            - target: 26257
+              published: 26257
+              protocol: tcp
+            - target: 8080
+              published: 8080
+              protocol: tcp
+        command: start --insecure
+
+    mongo:
+        image: mongo:3.6
+        networks:
+            axolotl:
+                aliases:
+                    - mongo
+        ports:
+            - target: 27017
+              published: 27017
+              protocol: tcp
+        volumes:
+            - type: volume
+              source: mongo-volumes
+              target: /data
+              volume:
+                nocopy: true
+
+    mongo-express:
+        image : mongo-express:0.42.2
+        networks:
+            axolotl:
+        links:
+            - mongo:mongo
+        depends_on:
+            - mongo
+        ports:
+            - target: 8081
+              published: 8081
+              protocol: tcp
+    mongo-admin:
+        image: mrvautin/adminmongo:latest
+        networks:
+            axolotl:
+        ports:
+            - target: 8082
+              published: 8082
+              protocol: tcp
+        environment:
+            PORT: 8082
+            LOCALE: "zh-tw"
+            CONTEXT: "http://mongo:27017"
+
+
+    redis:
+        image: redis:4.0.2-alpine
+        networks:
+            axolotl:
+                aliases:
+                    - redis
+        ports:
+            - target: 6379
+              published: 6379
+              protocol: tcp
+        volumes:
+            - type: bind
+              source: $PWD/config/redis.conf
+              target: /usr/local/etc/redis/redis.conf
+        command: redis-server /usr/local/etc/redis/redis.conf
+
+    redis-cmd:
+        image: tenstartups/redis-commander:latest
+        networks:
+            axolotl:
+        ports:
+            - "8083:8081"
+        depends_on:
+            - redis
+
+        command: --redis-host redis
+
+volumes:
+    mongo-volumes:
+    mariadb-volumes:
+    roach-volumes:
+
+networks:
+    axolotl:
+        external:
+            name: axolotl

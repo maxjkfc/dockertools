@@ -1,0 +1,10 @@
+{
+    "app":{
+        "host": "mongo",
+        "port": 27017,
+        "password": "",
+        "locale":"zh-tw",
+        "context": "",
+        "monitoring": true,
+    }
+}

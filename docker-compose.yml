@@ -39,17 +39,21 @@ services:
                 nocopy: true
 
     mongo-express:
-        image : mongo-express:0.42.2
+        image : mongo-express:0.45
         networks:
             axolotl:
         links:
             - mongo:mongo
         depends_on:
             - mongo
+        environment:
+          ME_CONFIG_MONGODB_SERVER: "mongo"
+          ME_CONFIG_MONGODB_PORT: 27017
         ports:
             - target: 8081
               published: 8081
               protocol: tcp
+
     mongo-admin:
         image: mrvautin/adminmongo:latest
         networks:
@@ -65,7 +69,7 @@ services:
 
 
     redis:
-        image: redis:4.0.2-alpine
+        image: redis:5.0-rc-alpine
         networks:
             axolotl:
                 aliases:

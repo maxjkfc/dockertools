@@ -108,6 +108,20 @@ services:
 
         command: --redis-host redis
 
+    glances:
+        image: nicolargo/glances
+        networks:
+            axolotl:
+        ports:
+          - "61208-61209:61208-61209"
+        environment:
+          GLANCES_OPT: "-w"
+        volumes:
+            - type: bind
+              source: /var/run/docker.sock
+              target: /var/run/docker.sock
+        pid: "host"
+
 volumes:
     mongo-volumes:
     mariadb-volumes:

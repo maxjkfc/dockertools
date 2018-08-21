@@ -21,6 +21,36 @@ services:
               protocol: tcp
         command: start --insecure
 
+    mariadb:
+        image: mariadb:latest
+        networks:
+            axolotl:
+                aliases:
+                    - mariadb
+        volumes:
+            - type: volume
+              source: mariadb-volumes
+              target: /var/lib/mysql
+              volume:
+                nocopy: true
+        environment:
+            MYSQL_ROOT_PASSWORD: 50master
+        ports:
+            - target: 3306
+              published: 3306
+              protocol: tcp
+
+    phpmyamdin:
+        image: phpmyadmin/phpmyadmin:latest
+        networks:
+            axolotl:
+        environment:
+            PMA_HOST: mariadb 
+        ports:
+            - target: 80
+              published: 8081
+              protocol: tcp
+
     mongo:
         image: mongo:3.6
         networks:
@@ -38,22 +68,6 @@ services:
               volume:
                 nocopy: true
 
-    mongo-express:
-        image : mongo-express:0.45
-        networks:
-            axolotl:
-        links:
-            - mongo:mongo
-        depends_on:
-            - mongo
-        environment:
-          ME_CONFIG_MONGODB_SERVER: "mongo"
-          ME_CONFIG_MONGODB_PORT: 27017
-        ports:
-            - target: 8081
-              published: 8081
-              protocol: tcp
-
     mongo-admin:
         image: mrvautin/adminmongo:latest
         networks:
@@ -66,7 +80,6 @@ services:
             PORT: 8082
             LOCALE: "zh-tw"
             CONTEXT: "http://mongo:27017"
-
 
     redis:
         image: redis:5.0-rc-alpine

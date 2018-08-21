@@ -67,7 +67,7 @@ cmd_container()
 {
 
     case $1 in 
-        "start")
+        "up")
             checknetwork
             base
             ;;

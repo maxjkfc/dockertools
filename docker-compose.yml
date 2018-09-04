@@ -122,10 +122,28 @@ services:
               target: /var/run/docker.sock
         pid: "host"
 
+    portainer:
+        image: portainer/portainer:latest
+        volumes:
+            - type: bind
+              source: /var/run/docker.sock
+              target: /var/run/docker.sock
+            - type: volume
+              source: portainer-volumes
+              target: /data
+              volume:
+                nocopy: true
+        ports:
+            - target: 9000
+              published: 9000
+              protocol: tcp
+
+
 volumes:
     mongo-volumes:
     mariadb-volumes:
     roach-volumes:
+    portainer-volumes:
 
 networks:
     axolotl:

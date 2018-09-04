@@ -44,6 +44,8 @@ services:
         image: phpmyadmin/phpmyadmin:latest
         networks:
             axolotl:
+                aliases:
+                    - phpmyadmin
         environment:
             PMA_HOST: mariadb 
         ports:
@@ -72,12 +74,14 @@ services:
         image: mrvautin/adminmongo:latest
         networks:
             axolotl:
+              aliases:
+                - mongoadmin
         ports:
-            - target: 8082
+            - target: 80
               published: 8082
               protocol: tcp
         environment:
-            PORT: 8082
+            PORT: 80
             LOCALE: "zh-tw"
             CONTEXT: "http://mongo:27017"
 
@@ -101,6 +105,8 @@ services:
         image: tenstartups/redis-commander:latest
         networks:
             axolotl:
+              aliases:
+                - redisadmin
         ports:
             - "8083:8081"
         depends_on:
@@ -124,6 +130,10 @@ services:
 
     portainer:
         image: portainer/portainer:latest
+        networks:
+            axolotl:
+              aliases:
+                - portainer
         volumes:
             - type: bind
               source: /var/run/docker.sock
@@ -137,7 +147,6 @@ services:
             - target: 9000
               published: 9000
               protocol: tcp
-
 
 volumes:
     mongo-volumes:

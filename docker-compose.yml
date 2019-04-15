@@ -1,7 +1,7 @@
 version : '3.3'
 services:
     roachdb:
-        image: cockroachdb/cockroach:v2.0.3
+        image: cockroachdb/cockroach:v2.1.6
         networks:
             axolotl:
                 aliases:
@@ -66,7 +66,12 @@ services:
         volumes:
             - type: volume
               source: mongo-volumes
-              target: /data
+              target: /data/db
+              volume:
+                nocopy: true
+            - type: volume
+              source: mongo-volumes
+              target: /data/configdb
               volume:
                 nocopy: true
 

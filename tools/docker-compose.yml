@@ -1,7 +1,7 @@
 version : '3.3'
 services:
     roachdb:
-        image: cockroachdb/cockroach:v2.1.6
+        image: cockroachdb/cockroach:latest
         networks:
             axolotl:
                 aliases:
